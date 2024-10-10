@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %} {% block title %}Connection{% endblock %} {%
+    block body %}
+    <section class="bg-indigo-50 dark:bg-blue-900">
+      {% if app.user %}
+      <div class="alert-bg-warning" role="alert">
+        <svg
+          class="flex-shrink-0 inline w-4 h-4 me-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+          />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div>
+          <span class="font-medium">Warning !</span>
+          &nbsp;&nbsp;<strong
+            >vous êtes connecté(e) en tant que {{ app.user.userIdentifier }}</strong
+          >
+          &nbsp;
+          <a href="{{ path('app_logout') }}" class="text-blue-700 underline"
+            >Logout</a
+          >
+        </div>
+        <button
+          type="button"
+          class="ms-auto alert-warning -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-yellow-300 dark:hover:bg-gray-700"
+          data-dismiss-target="#alert-4"
+          aria-label="Close"
+        >
+          <span class="sr-only">Close</span>
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+        </button>
+      </div>
+      {% endif %}
+      <div
+        class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+      >
+        <div
+          class="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1
+              class="text-xl text-center font-bold leading-tight tracking-tight text-cyan-400 md:text-2xl dark:text-white"
+            >
+              Se connecter
+            </h1>
+            <div>
+              <p id="message_form_connexion"></p>
+            </div>
+            {% if error %}
+            <div class="alert-bg-danger" role="alert">
+              <svg
+                class="flex-shrink-0 inline w-4 h-4 me-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+                />
+              </svg>
+              <span class="sr-only">Info</span>
+              <div>
+                <span class="font-medium">Vérifiez votre saisie !</span>
+                &nbsp;&nbsp;<strong
+                  >{{ error.messageKey|trans(error.messageData, 'security') }}</strong  {#invalid credentials#}
+                >
+              </div>
+              <button
+                type="button"
+                class="ms-auto alert-danger -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+                data-dismiss-target="#alert-2"
+                aria-label="Close"
+              >
+                <span class="sr-only">Close</span>
+                <svg
+                  class="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </div>
+            {% endif %}
+            <form
+              method="post"
+              class="space-y-4 md:space-y-6"
+              id="connexion_form"
+              novalidate
+            >
+              <div>
+                <label
+                  for="inputEmail"
+                  class="block mb-1 text-xs font-light text-gray-500 dark:text-gray-400"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  value="{{ last_username }}"
+                  name="email"
+                  id="inputEmail"
+                  class="rounded-lg bg-gray-50 border border-gray-300 text-gray-900 text-xs focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="inputPassword"
+                  class="block mb-1 text-xs font-light text-gray-500 dark:text-gray-400"
+                  >Mot de passe</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  id="inputPassword"
+                  class="rounded-lg bg-gray-50 border border-gray-300 text-gray-900 text-xs focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="hidden"
+                  name="_csrf_token"
+                  value="{{ csrf_token('authenticate') }}"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="_remember_me"
+                  id="remember_me"
+                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                />
+                <label
+                  class="font-light text-gray-500 dark:text-gray-300 text-xs"
+                  id="smallSubmit"
+                >
+                  Se souvenir de moi
+                </label>
+              </div>
+    
+              <input
+                value="Connexion"
+                id="formSubmitLogin"
+                class="w-full btn-info"
+                type="submit"
+              />
+            </form>
+            <p class="text-xs font-light text-gray-500 dark:text-gray-400">
+              Mot de passe oublié ? &nbsp;&nbsp;
+              <a
+                href="#"
+                class="font-medium text-cyan-400 hover:underline dark:text-primary-500"
+                >&nbsp;Réinitialisation</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock %}
