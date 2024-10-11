@@ -1,19 +1,76 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Register{% endblock %}
-
-{% block body %}
-    <h1>Register</h1>
-
-    {{ form_errors(registrationForm) }}
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
-{% endblock %}
+{% extends 'base.html.twig' %} {% block title %}inscription{% endblock %} {%
+    block body %}
+    
+    <section class="bg-indigo-50 dark:bg-blue-900">
+      <div
+        class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+      >
+        <div
+          class="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1
+              class="text-xl text-center font-bold leading-tight tracking-tight text-cyan-400 md:text-2xl dark:text-white"
+            >
+              Inscription
+            </h1>
+            <div>
+              <p id="message_form_inscription"></p>
+            </div>
+            {{
+              form_start(registrationForm, {
+                attr: {
+                  novalidate: "novalidate",
+                  class: "space-y-4 md:space-y-6",
+                  id: "registration_form"
+                }
+              })
+            }}
+            <div>
+              {{ form_label(registrationForm.email) }}
+              {{ form_widget(registrationForm.email) }}
+              <div class="text-sm text-red-700">
+                {{ form_errors(registrationForm.email) }}
+                <small id="emailSmall"></small>
+              </div>
+            </div>
+            <div>
+              {{ form_label(registrationForm.plainPassword) }}
+              {{ form_widget(registrationForm.plainPassword) }}
+              <div class="text-sm text-red-700">
+                {{ form_errors(registrationForm.plainPassword) }}
+                <small id="plainPasswordSmall"></small>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                {{ form_widget(registrationForm.agreeTerms) }}
+              </div>
+              <div class="ml-3 text-sm">
+                {{ form_label(registrationForm.agreeTerms) }}
+              </div>
+              <div class="text-sm text-red-700 ml-2">
+                {{ form_errors(registrationForm.agreeTerms) }}
+              </div>
+            </div>
+            <button
+              type="submit"
+              id="registration_form_submit"
+              class="w-full btn-info"
+            >
+              Cr&eacute;er votre compte
+            </button>
+            {{ form_end(registrationForm) }}
+            <p class="text-xs font-light text-gray-500 dark:text-gray-400">
+              D&eacute;j&agrave; inscrit ? &nbsp;&nbsp;
+              <a
+                href="{{ path('app_login') }}"
+                class="font-medium text-cyan-400 hover:underline dark:text-primary-500"
+                >&nbsp;Connexion</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endblock %}
