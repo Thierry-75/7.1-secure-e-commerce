@@ -23,10 +23,12 @@ class JwtService
         if($validity > 0){
             $now = new \DateTimeImmutable();
             $exp = $now->getTimestamp() + $validity;
+
+            $payload['iat'] = $now->getTimestamp();
+            $payload['exp'] = $exp;
         }
 
-        $payload['iat'] = $now->getTimestamp();
-        $payload['exp'] = $exp;
+ 
 
         // encodage base 64
         $base64Header = base64_encode(json_encode($header));
@@ -67,7 +69,7 @@ class JwtService
         // decoupe token
         $array = explode('.', $token);
         // decodage token_header
-        $header = json_decode(base64_decode($array[0],true));
+        $header = json_decode(base64_decode($array[0]),true);
 
         return $header;
     }
@@ -83,7 +85,7 @@ class JwtService
         // decoupe token
         $array = explode('.',$token);
         // decodage token_payload
-        $payload = json_decode(base64_decode($array[1],true));
+        $payload = json_decode(base64_decode($array[1]),true);
 
         return $payload;
     }
