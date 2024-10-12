@@ -28,7 +28,8 @@ class UserFixtures extends Fixture
         $admin->setEmail('thierrydothee@protonmail.com')
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
             ->setPlainPassword('ArethiA75!')
-            ->setCreateAt(new \DateTimeImmutable());
+            ->setCreateAt(new \DateTimeImmutable())
+            ->setVerified(false);
 
         $users[] = $admin;
         $manager->persist($admin);
@@ -37,7 +38,8 @@ class UserFixtures extends Fixture
             $user->setEmail($this->faker->email())
                 ->setRoles(['ROLE_USER'])
                 ->setPlainPassword('ArethiA75!')
-                ->setCreateAt(new \DateTimeImmutable());
+                ->setCreateAt(new \DateTimeImmutable())
+                ->setVerified(mt_rand(0,1) === 1 ? true : false );
             $users[] = $user;
             $manager->persist($user);
         }

@@ -1,5 +1,5 @@
 window.onload = () => {
-  /*-------------formulaire login.html.twig init-----------------*/
+  /*-------------formulaire login.html.twig -----------------*/
   let connexion_form = document.querySelector("#connexion_form");
   if (connexion_form) {
     let affichage = document.querySelector("#message_form_connexion");
@@ -189,7 +189,7 @@ window.onload = () => {
     });
   }
 };
-/*--login----*/
+/*----traitement---*/
 const clearEmail = function (champ, message, erratum) {
   let mot = "Indiquez votre adresse email";
   story_show(message, mot);
