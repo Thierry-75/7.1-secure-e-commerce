@@ -79,4 +79,35 @@ class RegistrationController extends AbstractController
         }
 
     }
+
+    /**
+     * check count customer via address email
+     *
+     * @param UserRepository $userRepository
+     * @param JwtService $jwt
+     * @param MailService $mail
+     * @return Response
+     */
+    #[Route('/resendverif',name: 'resend_verif')]
+    public function resendVerif(UserRepository $userRepository, JwtService $jwt, MailService $mail): Response
+    {
+        $user = $this->getUser();
+        if(!$user){
+            $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
+            return $this->redirectToRoute('app_login');
+        }
+        if($user->isVerified()){
+            $this->addFlash('alert-warning','Ce compte est déjà activé !');
+            return $this->redirectToRoute('app_main');
+        }
+        // generate jeton
+        $header = [ 'typ' => 'JWT', 'alg' => 'HS256'];
+        $payload = ['user_id' => $user->getId()];
+        $token = $jwt->generate($header,$payload,$this->getParameter('app.jwtsecret'));
+        // envoi mail
+        $mail->sendMail('no-reply@e-commerce.com',$user->getEmail(),'Activation de votre compte','register',['user'=>$user,'token'=>$token]);
+        $this->addFlash('alert-success','Email de vérification envoyé !');
+        return $this->redirectToRoute('app_main');
+    }
+
 }

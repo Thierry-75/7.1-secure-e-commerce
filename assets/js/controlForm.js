@@ -3,7 +3,7 @@ window.onload = () => {
   let connexion_form = document.querySelector("#connexion_form");
   if (connexion_form) {
     let affichage = document.querySelector("#message_form_connexion");
-    let indication = "Indiquez votre Email et votre mot de passe";
+    let indication = "Indiquez votre email et votre mot de passe";
     story_show(affichage, indication);
 
     let inputEmail = connexion_form.querySelector("#inputEmail");
@@ -102,7 +102,7 @@ window.onload = () => {
       "#plainPasswordSmall"
     );
     let erreur_rgpd = registration_form.querySelector("#agreeSmall");
-    let mot = "Saisir vos données";
+    let mot = "Saisir vos identifiants";
     story_show(message_form_inscription, mot);
 
     let registration_form_email = registration_form.querySelector(
@@ -188,7 +188,58 @@ window.onload = () => {
       }
     });
   }
+
+  /*------------reset_password_request.html.twig----------------------------*/
+let form_reset_email = document.querySelector('#form_reset_email');
+if(form_reset_email){
+let message_reset_email = document.querySelector('#message_reset_email');
+let indication = 'Indiquez votre adresse courriel';
+story_show(message_reset_email,indication);
+let email_error = form_reset_email.querySelector('#emailSmall');
+let reset_password_request_form_email = form_reset_email.querySelector('#reset_password_request_form_email');
+reset_password_request_form_email.addEventListener('focus',function(){
+  clearEmail(this, message_reset_email, email_error);
+});
+reset_password_request_form_email.addEventListener('change',function(){
+  controlEmail(this, message_reset_email, email_error);
+});
+reset_password_request_form_email.addEventListener('blur',function(){
+  resultatEmail(this, email_error);
+});
+
+let submit_reset = form_reset_email.querySelector('#submit_reset');
+submit_reset.addEventListener('click',function(event){
+  let inputs = form_reset_email.getElementsByTagName('input');
+  let compteur = 0;
+  let champsSuccess = [];
+  let nbBordure = 0;
+  for(var i =0; i < inputs.length; i++){
+    if(inputs[i].type =='email'){
+      champsSuccess[i]=inputs[i];
+      if(inputs[i].value == ''){
+        alert_submit(inputs[i]);
+        compteur++;
+      }
+    }
+  }
+  for(var j =0; j < champsSuccess.length; j++){
+    if(champsSuccess[j].classList.contains('border-green-600')){
+      nbBordure++;
+    }
+  }
+  if(!compteur == 0 || !champsSuccess.length == nbBordure){
+    let indication = 'Votre saisie n\'est pas conforme';
+    story_show(message_reset_email,indication);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    return false;
+  }
+})
+
+}
 };
+
+
 /*----traitement---*/
 const clearEmail = function (champ, message, erratum) {
   let mot = "Indiquez votre adresse email";
