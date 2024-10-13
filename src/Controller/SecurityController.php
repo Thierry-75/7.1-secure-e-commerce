@@ -59,7 +59,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
             $error = $validator->validate(($request));
-            if ($error > 0) {
+            if (count($error) > 0) {
                 return $this->render('security/reset_password_request.html.twig', ['requestPassFrom' => $form->createView(), 'errors' => $error]);
             }
             if ($form->isSubmitted() && $form->isValid()) {
@@ -76,11 +76,12 @@ class SecurityController extends AbstractController
                         return $this->redirectToRoute('app_error');
                     }
                     //link 
-                    $url = $this->generateUrl('reset_pass', ['token' => $token, UrlGeneratorInterface::ABSOLUTE_URL]);
+                    $url = $this->generateUrl('reset_pass', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
                     //email
                     $context = ['url' => $url, 'user' => $user];
-                    $mail->sendMail('no-reply@e-commerce.com', $user->getEmail(), 'Réinitialisation du mot de passe', 'password reset', $context);
+                    $mail->sendMail('no-reply@e-commerce.com', $user->getEmail(), 'Réinitialisation du mot de passe', 'password_reset', $context);
                     $this->addFlash('alert-success', 'email envoyé !');
+                    return $this->redirectToRoute('app_main');
                 }
                 $this->addFlash('alert-danger', 'Un problème est survenu !');
                 return $this->redirectToRoute('app_login');
@@ -114,12 +115,12 @@ class SecurityController extends AbstractController
                         return $this->redirectToRoute('app_error');
                     }
                     $this->addFlash('alert-success', 'Mot de passe changé avec succès !');
-                    return $this->redirectToRoute('app_login');
+                    return $this->redirectToRoute('app_main');
                 }
             }
             return $this->render('security/reset_password.html.twig', ['form_reset' => $form_reset->createView()]);
         }
-        $this->addFlash('alert-danger', 'Jeton invalide !');
+        $this->addFlash('danger', 'Jeton invalide !');
         return $this->redirectToRoute('app_login');
     }
 }

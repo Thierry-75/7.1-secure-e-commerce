@@ -234,8 +234,68 @@ submit_reset.addEventListener('click',function(event){
     event.stopImmediatePropagation();
     return false;
   }
-})
+});
+}
 
+/*---------------reset_password.html.twig-----*/
+let reset_password_form = document.querySelector('#reset_password_form');
+if(reset_password_form){
+  let message_reset_password = document.querySelector('#message_reset_password');
+  let erreur_password = reset_password_form.querySelector('#passwordSmall');
+  let indication ='Indiquez votre nouveau mot de passe';
+  story_show(message_reset_password,indication);
+
+  let reset_password_form_password_first = reset_password_form.querySelector('#reset_password_form_password_first');
+  let reset_password_form_password_second = reset_password_form.querySelector('#reset_password_form_password_second');
+  reset_password_form_password_first.addEventListener('focus',function(){
+    clearPassword(this, message_reset_password, erreur_password);
+    reset_password_form_password_second.value='';
+  })
+  reset_password_form_password_first.addEventListener('change',function(){
+    controlPassword(this, message_reset_password, erreur_password);
+  })
+  reset_password_form_password_first.addEventListener('blur',function(){
+    resultatPassword(this, erreur_password);
+  })
+
+
+  reset_password_form_password_second.addEventListener('focus',function(){
+    clearPassword(this, message_reset_password, erreur_password);
+  })
+  reset_password_form_password_second.addEventListener('change',function(){
+    controlPassword2(this, message_reset_password, erreur_password,reset_password_form_password_first);
+  })
+  reset_password_form_password_second.addEventListener('blur',function(){
+    resultatPassword(this, erreur_password);
+  })
+  let submit_reset_password = reset_password_form.querySelector('#submit_reset_password');
+  submit_reset_password.addEventListener('click',function(event){
+    let inputs = reset_password_form.getElementsByTagName('input');
+    let compteur = 0;
+    let champsSuccess = [];
+    let nbBordure = 0;
+    for(var i =0; i < inputs.length; i++){
+      if(inputs[i].type == 'password'){
+        champsSuccess[i]=inputs[i];
+        if(inputs[i].value == ''){
+          alert_submit(inputs[i]);
+          compteur++;
+        }
+      }
+    }
+    for(var j =0; j < champsSuccess.length; j++){
+      if(champsSuccess[j].classList.contains('border-green-600')){
+        nbBordure++;
+      }
+    }
+    if(!compteur == 0 || !champsSuccess == nbBordure){
+      let indication = 'Votre saisie n\'est pas conforme';
+      story_show(message_reset_password,indication);
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return false;
+    }
+  })
 }
 };
 
@@ -283,6 +343,19 @@ const controlPassword = function (champ, message, erratum) {
     success_submit(champ);
   } else {
     alert_submit(champ);
+    clearMessage(message);
+    erratum.innerHTML =
+      "Champ invalide 10 à 12 caractères: A-Za-z0-9#?!@$ %^&*-";
+  }
+};
+const controlPassword2 = function (second, message, erratum,premier) {
+  let password_regexp = new RegExp(
+    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{10,12}$"
+  );
+  if (second.value.match(password_regexp) && second.value == premier.value) {
+    success_submit(second);
+  } else {
+    alert_submit(second);
     clearMessage(message);
     erratum.innerHTML =
       "Champ invalide 10 à 12 caractères: A-Za-z0-9#?!@$ %^&*-";
