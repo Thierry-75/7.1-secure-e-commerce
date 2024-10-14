@@ -1,0 +1,84 @@
+	<section class="bg-indigo-50 dark:bg-blue-900 h-full">
+		<div class="p-8 rounded border border-gray-200">
+			<h1 class="text-xl text-center font-bold leading-tight tracking-tight text-cyan-400 md:text-2xl dark:text-white">Renseignez vos coordonnées</h1>
+			<div>
+			<p class="text-red-500 mt-6 text-center text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing elit. </p>
+			</div>
+			{{
+				form_start(form_register, {
+				  attr: {
+					novalidate: "novalidate",
+					class: "space-y-4 md:space-y-6",
+					id: "registration_form"
+				  }
+				})
+			  }}
+				<div class="mt-8 grid lg:grid-cols-2 gap-4">
+					<div>
+						{{ form_label(form_register.nom) }}
+						{{ form_widget(form_register.nom) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.nom) }}
+						  <small id="nomError"></small>
+						</div>
+					</div>
+					<div>
+						{{ form_label(form_register.prenom) }}
+						{{ form_widget(form_register.prenom) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.prenom) }}
+						  <small id="prenomError"></small>
+						</div>
+					</div>
+					<div>
+						{{ form_label(form_register.telephone) }}
+						{{ form_widget(form_register.telephone) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.telephone) }}
+						  <small id="telephoneError"></small>
+						</div>
+					</div>
+					<div>
+						{{ form_label(form_register.numero) }}
+						{{ form_widget(form_register.numero) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.numero) }}
+						  <small id="numeroError"></small>
+						</div>
+					</div>
+				</div>
+				<div>
+					{{ form_label(form_register.adresse) }}
+					{{ form_widget(form_register.adresse) }}
+					<div class="text-sm text-red-700">
+					  {{ form_errors(form_register.adresse) }}
+					  <small id="adresseError"></small>
+					</div>
+				</div>
+				<div class="mt-8 grid lg:grid-cols-2 gap-4">
+					<div>
+						{{ form_label(form_register.codePostal) }}
+						{{ form_widget(form_register.codePostal) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.codePostal) }}
+						  <small id="codePostalError"></small>
+						</div>
+					</div>
+					<div>
+						{{ form_label(form_register.ville) }}
+						{{ form_widget(form_register.ville) }}
+						<div class="text-sm text-red-700">
+						  {{ form_errors(form_register.ville) }}
+						  <small id="villeError"></small>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div>
+					{{ form_label(form_register.submit) }}
+					{{ form_widget(form_register.submit) }}
+				</div>
+				{{ form_end(form_register) }}
+		</div>
+	</section>
+

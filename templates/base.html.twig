@@ -19,13 +19,21 @@
       importmap("app")
     }}{% endblock %} {% endblock %}
   </head>
-  <body>
+  <body class="bg-indigo-50 dark:bg-blue-900 h-full">
+    <main>
     {% include "./_components/_nav.html.twig" %} {% include
     "./_components/_alert.html.twig" %} {% include
-    "./_components/_activation.html.twig" %} {% block body %}
-    <div class="container mx-auto">
-      {% block center %} {% endblock %} {% block right %} {% endblock %}
-    </div>
+    "./_components/_activation.html.twig" %} 
+    {% block body %}
+ 
+      
+      {% block left %} {% endblock %}
+      
+       
+      {% block center %} {% endblock %}
+      
+   
     {% endblock %}
+  </main>
   </body>
 </html>
