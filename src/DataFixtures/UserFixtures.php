@@ -2,25 +2,18 @@
 
 namespace App\DataFixtures;
 
-use Faker\Factory;
+use App\Entity\Civility;
 use App\Entity\User;
-use Faker\Generator;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Faker;
 
 
 class UserFixtures extends Fixture
 {
 
-    /**
-     * @var Generator
-     */
-    private Generator $faker;
 
-    public function __construct()
-    {
-        $this->faker = Factory::create('fr_Fr');
-    }
+    public function __construct(){}
 
     public function load(ObjectManager $manager): void
     {
@@ -29,21 +22,44 @@ class UserFixtures extends Fixture
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
             ->setPlainPassword('ArethiA75!')
             ->setCreateAt(new \DateTimeImmutable())
-            ->setVerified(false);
+            ->setVerified(false)
+            ->setCompleted(false);
 
-        $users[] = $admin;
-        $manager->persist($admin);
-        for ($i = 0; $i < 4; $i++) {
+            $manager->persist($admin);
+            $manager->flush();
+        $faker = Faker\Factory::create('fr_FR');
+        $nettoyage= ['+33',' ','(',')'];
+        for ($i = 0; $i < 20; $i++) {
             $user = new User();
-            $user->setEmail($this->faker->email())
+            $user->setEmail($faker->email())
                 ->setRoles(['ROLE_USER'])
                 ->setPlainPassword('ArethiA75!')
                 ->setCreateAt(new \DateTimeImmutable())
-                ->setVerified(mt_rand(0,1) === 1 ? true : false );
-            $users[] = $user;
+                ->setVerified(true)
+                ->setCompleted(mt_rand(0,1) === 1 ? true : false);
+                        $manager->persist($user);
+                        $manager->flush();
+                        if($user->isCompleted() == true ){
+                        $civility = new Civility();
+                        $civility->setClient($user)
+                        ->setCreatedAt(new \DateTimeImmutable())
+                        ->setPrenom(mt_rand(0,1) === 1 ? $faker->firstNameFemale() : $faker->firstNameMale())
+                        ->setNom($faker->lastName())
+                      
+                        ->setTelephone(str_replace($nettoyage,'',$faker->serviceNumber()))
+                        ->setNumero(mt_rand(1,1000))
+                        ->setAdresse($faker->streetName())
+                        ->setCodePostal(str_replace(' ','',$faker->postcode()))
+                        ->setVille($faker->city());
+                        $manager->persist($civility);
+
+                    }
+    
             $manager->persist($user);
+            $manager->flush();
+   
         }
 
-        $manager->flush();
+     
     }
 }

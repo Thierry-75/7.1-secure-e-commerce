@@ -34,3 +34,4 @@ yarn-error.log
 ###> migrations ###
 /migrations
 ###> migrations ###
+/nbproject/private/

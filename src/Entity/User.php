@@ -47,6 +47,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string',length: 255, nullable: true)]
     private ?string $resetToken = null;
 
+    #[ORM\Column]
+    private ?bool $isCompleted = false;
+
+    #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
+    private ?Civility $civility = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -182,6 +188,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetToken($resetToken)
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function isCompleted(): ?bool
+    {
+        return $this->isCompleted;
+    }
+
+    public function setCompleted(bool $isCompleted): static
+    {
+        $this->isCompleted = $isCompleted;
+
+        return $this;
+    }
+
+    public function getCivility(): ?Civility
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(Civility $civility): static
+    {
+        // set the owning side of the relation if necessary
+        if ($civility->getClient() !== $this) {
+            $civility->setClient($this);
+        }
+
+        $this->civility = $civility;
 
         return $this;
     }
