@@ -568,7 +568,7 @@ const controlNumero = function (champ, message, erratum) {
 };
 
 const controlTelephone = function (champ, message, erratum) {
-  let tel_regexp = new RegExp(/^[0-9]{10,10}$/);
+  let tel_regexp = new RegExp(/^[0-9]{10}$/);
   if (champ.value.match(tel_regexp)) {
     success_submit(champ);
   } else {

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Civility;
+use App\Entity\User;
 use App\Form\CivilityFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ class CivilityController extends AbstractController
     #[Route('/civility/register', name: 'app_civility_register', methods: ['GET', 'POST'])]
     public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator): Response
     {
+       
         if (!$this->getUser()) {
             $this->addFlash('alert-danger', 'Vous devez être connecté pour accéder à cette page !');
             return $this->redirectToRoute('app_login');
@@ -25,6 +27,7 @@ class CivilityController extends AbstractController
             return $this->redirectToRoute('app_main');  // redirect to profil
         }
         $civility = new Civility();
+        $user = $this->getUser();
         $form_register = $this->createForm(CivilityFormType::class, $civility);
         $form_register->handleRequest($request);
         if ($request->isMethod('POST')) {
@@ -34,6 +37,9 @@ class CivilityController extends AbstractController
             }
             if ($form_register->isSubmitted() && $form_register->isValid()) {
                 $civility->setClient($this->getUser());
+                $client = $em->getRepository((User::class))->find($user);
+                $client->setCompleted(true);
+                $em->persist($client);
                 $em->persist($civility);
                 $em->flush();
                 $this->addFlash('alert-success', 'Vos coordonnées ont été enregistrées !');
