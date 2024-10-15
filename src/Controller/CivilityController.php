@@ -16,9 +16,7 @@ class CivilityController extends AbstractController
     #[Route('/civility/register', name: 'app_civility_register', methods: ['GET', 'POST'])]
     public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator): Response
     {
-        $user = $this->getUser();
-        //dd($user);
-        if (!$user) {
+        if (!$this->getUser()) {
             $this->addFlash('alert-danger', 'Vous devez être connecté pour accéder à cette page !');
             return $this->redirectToRoute('app_login');
         }
