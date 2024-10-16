@@ -15,10 +15,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em, MailService $mailer, JwtService $jwt): Response
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        EntityManagerInterface $em, 
+        JwtService $jwt,
+        MailService $mailer
+        ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -43,8 +50,7 @@ class RegistrationController extends AbstractController
             $payload = ['user_id'=>$user->getId()];
             $token = $jwt->generate($header,$payload,$this->getParameter('app.jwtsecret'));
             //envoi mail
-            $context=['user'=>$user,'token'=>$token];
-            $mailer->sendMail('no-reply@e-commerce.com', $user->getEmail(),'Activation de votre compte','register',$context);
+            $mailer->sendMail('no-reply@e-commerce.com', $user->getEmail(),'Activation de votre compte','register',['user'=>$user,'token'=>$token]);
             $this->addFlash('alert-success','confirmer votre adresse courriel');
             return $this->redirectToRoute('app_main');
         }
