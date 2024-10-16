@@ -9,19 +9,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Message\MailNotification;
-use App\Service\MailService;
+use App\Message\SendNotification;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 ;
 
 class CivilityController extends AbstractController
 {
     #[Route('/civility/register', name: 'app_civility_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator,MailService $mailer): Response
+    public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator,MessageBusInterface $bus): Response
     {
        
         if (!$this->getUser()) {
@@ -48,7 +46,8 @@ class CivilityController extends AbstractController
                 $em->persist($client);
                 $em->persist($civility);
                 $em->flush();
-                $mailer->sendMail('webmaster@e-commerce.com', $client->getEmail(),'Confirmation de vos coordonnées','confirmation',['user'=>$user,'token'=>'']);  
+                $bus->dispatch(new SendNotification('Vos coordonnées ont bien été reçues',$client->getEmail()));
+               // $mailer->sendMail('webmaster@e-commerce.com', $client->getEmail(),'Confirmation de vos coordonnées','confirmation',['user'=>$user,'token'=>'']);  
                 $this->addFlash('alert-success', 'Vos coordonnées ont été enregistrées !');
                 return $this->redirectToRoute('app_main'); // vers profile ?
             }
