@@ -2,14 +2,15 @@
 
 namespace App\MessageHandler;
 
-use App\Message\SendInscription;
+
+use App\Message\SendReinitialisation;
 use App\Service\MailService;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 
 
 #[AsMessageHandler()]
-class SendInscriptionHandler
+class SendReinitialisationHandler
 {
     private $mailer;
 
@@ -18,7 +19,7 @@ class SendInscriptionHandler
         $this->mailer = $mailer;
     }
 
-    public function __invoke(SendInscription $notification)
+    public function __invoke(SendReinitialisation $notification)
     {
         $this->mailer->sendMail(
             $notification->getFrom(),

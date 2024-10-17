@@ -27,4 +27,5 @@ framework:
 
             # Route your messages to the transports
             App\Message\SendNotification: async
-            #App\Message\SendInscription: async
+            App\Message\SendReinitialisation: async
+            App\Message\SendConfirmationReset: async
