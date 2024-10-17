@@ -97,11 +97,11 @@ class RegistrationController extends AbstractController
     #[Route('/resendverif',name: 'resend_verif')]
     public function resendVerif(UserRepository $userRepository, JwtService $jwt, MailService $mail): Response
     {
-        $user = $this->getUser();
-        if(!$user){
+        if($this->denyAccessUnlessGranted('ROLE_USER')){
             $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');
         }
+        $user = $this->getUser();
         if($user->isVerified()){
             $this->addFlash('alert-warning','Ce compte est déjà activé !');
             return $this->redirectToRoute('app_main');
@@ -114,6 +114,24 @@ class RegistrationController extends AbstractController
         $mail->sendMail('no-reply@e-commerce.com',$user->getEmail(),'Activation de votre compte','register',['user'=>$user,'token'=>$token]);
         $this->addFlash('alert-success','Email de vérification envoyé !');
         return $this->redirectToRoute('app_main');
+    }
+
+    #[Route('register/update/{id}',name:'app_register_update',methods:['GET','POST'])]
+    public function updateUser(User $user): Response
+    {
+    if($this->denyAccessUnlessGranted('ROLE_GESTION')){
+        return $this->redirectToRoute('app_main');
+    }
+    return $this->render('registration/update.html.twig');
+}
+
+    #[Route('register/delete/{id}',name:'app_register_delete',methods:['GET','POST'])]
+        public function deleteUser(User $user): Response
+        {
+        if($this->denyAccessUnlessGranted('ROLE_ADMIN')){
+            return $this->redirectToRoute('app_main');
+        }
+        return $this->render('registration/delete.html.twig');
     }
 
 }

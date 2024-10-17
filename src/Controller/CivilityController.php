@@ -22,10 +22,11 @@ class CivilityController extends AbstractController
     public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator,MessageBusInterface $bus): Response
     {
        
-        if (!$this->getUser()) {
-            $this->addFlash('alert-danger', 'Vous devez être connecté pour accéder à cette page !');
+        if($this->denyAccessUnlessGranted('ROLE_USER')){
+            $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');
         }
+        
         if (!$this->getUser()->isCompleted() == false) {
             $this->addFlash('alert-warning', 'Ce compte est déjà activé !');
             return $this->redirectToRoute('app_main');  // redirect to profil
@@ -53,5 +54,25 @@ class CivilityController extends AbstractController
             }
         }
         return $this->render('/civility/register.html.twig', ['form_register' => $form_register->createView()]);
+    }
+
+    #[Route('civility/update/{id}',name:'app_civility_update',methods:['GET','POST'])]
+    public function updateUser(Civility $civility): Response
+    {
+    if($this->denyAccessUnlessGranted('ROLE_GESTION')){
+        $this->addFlash('alert-danger','Accès interdit');
+        return $this->redirectToRoute('app_main');
+    }
+    return $this->render('civility/update.html.twig');
+}
+
+    #[Route('civility/delete/{id}',name:'app_civility_delete',methods:['GET','POST'])]
+        public function deleteUser(Civility $civility): Response
+        {
+        if($this->denyAccessUnlessGranted('ROLE_ADMIN')){
+            $this->addFlash('alert-danger','Accès interdit');
+            return $this->redirectToRoute('app_main');
+        }
+        return $this->render('civility/delete.html.twig');
     }
 }

@@ -44,7 +44,12 @@ security:
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/civility, roles: ROLE_USER }
 
+    role_hierarchy:
+         ROLE_GESTION: ROLE_USER
+         ROLE_ADMIN: ROLE_GESTION
+         
 when@test:
     security:
         password_hashers:
