@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %} {% block title %}Connection{% endblock %} {%
     block body %}
     <section class="bg-indigo-50 dark:bg-blue-900">
-      {% if app.user %}
+      {% if app.user and app.user.isCompleted == true %}
       <div class="alert-bg-warning" role="alert">
         <svg
           class="flex-shrink-0 inline w-4 h-4 me-3"

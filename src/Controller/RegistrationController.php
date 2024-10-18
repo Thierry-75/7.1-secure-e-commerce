@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
                     return $this->redirectToRoute('app_error', ['exception'=> $e]);
                 }
                 $this->addFlash('alert-success','Votre compte a été activé !');
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_civility_register'); 
             }
             $this->addFlash('alert-danger','Token invalide !');
             return $this->redirectToRoute('app_login');
