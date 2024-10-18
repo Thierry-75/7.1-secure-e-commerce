@@ -35,7 +35,7 @@ class UserFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setPlainPassword('ArethiA75!')
                 ->setCreateAt(new \DateTimeImmutable())
-                ->setVerified(true)
+                ->setVerified(mt_rand(0,1) === 1 ? true : false)
                 ->setCompleted(mt_rand(0,1) === 1 ? true : false);
                         $manager->persist($user);
                         $manager->flush();

@@ -13,23 +13,28 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Message\SendNotification;
 use Symfony\Component\Messenger\MessageBusInterface;
+use App\Service\IntraController;
 
 ;
 
 class CivilityController extends AbstractController
 {
     #[Route('/civility/register', name: 'app_civility_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, EntityManagerInterface $em,  ValidatorInterface $validator,MessageBusInterface $bus): Response
+    public function register(Request $request,
+     EntityManagerInterface $em,
+     ValidatorInterface $validator,
+     MessageBusInterface $bus,
+     IntraController $intra): Response
     {
        
         if($this->denyAccessUnlessGranted('ROLE_USER')){
             $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');
         }
-        
-        if (!$this->getUser()->isCompleted() == false) {
+        if($intra->confirmationEmail($this->getUser()))
+        {
             $this->addFlash('alert-warning', 'Ce compte est déjà activé !');
-            return $this->redirectToRoute('app_main');  // redirect to profil
+            return $this->redirectToRoute('app_main'); 
         }
         $civility = new Civility();
         $user = $this->getUser();

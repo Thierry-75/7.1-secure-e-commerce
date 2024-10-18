@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\IntraController;
 
 
 class RegistrationController extends AbstractController
@@ -64,7 +65,7 @@ class RegistrationController extends AbstractController
      * isValid && isExpired && check
      */
     #[Route('/check/{token}',name: 'check_user')]
-    public function CheckUser($token, JwtService $jwt, UserRepository $userRepository, EntityManagerInterface $em,): Response
+    public function CheckUser($token, JwtService $jwt, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         if($jwt->isValid($token)  && !$jwt->isExpired($token)  && $jwt->check($token,$this->getParameter('app.jwtsecret'))){
             $payload = $jwt->getPayload($token);
@@ -95,29 +96,29 @@ class RegistrationController extends AbstractController
      * @return Response
      */
     #[Route('/resendverif',name: 'resend_verif')]
-    public function resendVerif(UserRepository $userRepository, JwtService $jwt, MailService $mail): Response
+    public function resendVerif(UserRepository $userRepository, JwtService $jwt, MailService $mail,IntraController $intra): Response
     {
         if($this->denyAccessUnlessGranted('ROLE_USER')){
             $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');
         }
-        $user = $this->getUser();
-        if($user->isVerified()){
+        if(!$intra->confirmationEmail($this->getUser()))
+        {
             $this->addFlash('alert-warning','Ce compte est déjà activé !');
-            return $this->redirectToRoute('app_main');
+            return $this->redirectToRoute('app_main'); // vers profil
         }
         // generate jeton
         $header = [ 'typ' => 'JWT', 'alg' => 'HS256'];
-        $payload = ['user_id' => $user->getId()];
+        $payload = ['user_id' => $this->getUser()->getId()];
         $token = $jwt->generate($header,$payload,$this->getParameter('app.jwtsecret'));
         // envoi mail
-        $mail->sendMail('no-reply@e-commerce.com',$user->getEmail(),'Activation de votre compte','register',['user'=>$user,'token'=>$token]);
+        $mail->sendMail('no-reply@e-commerce.com',$this->getUser()->getEmail(),'Activation de votre compte','register',['user'=>$this->getUser(),'token'=>$token]);
         $this->addFlash('alert-success','Email de vérification envoyé !');
         return $this->redirectToRoute('app_main');
     }
 
     #[Route('register/update/{id}',name:'app_register_update',methods:['GET','POST'])]
-    public function updateUser(User $user): Response
+    public function updateUser(): Response
     {
     if($this->denyAccessUnlessGranted('ROLE_GESTION')){
         return $this->redirectToRoute('app_main');
@@ -126,7 +127,7 @@ class RegistrationController extends AbstractController
 }
 
     #[Route('register/delete/{id}',name:'app_register_delete',methods:['GET','POST'])]
-        public function deleteUser(User $user): Response
+        public function deleteUser(): Response
         {
         if($this->denyAccessUnlessGranted('ROLE_ADMIN')){
             return $this->redirectToRoute('app_main');
