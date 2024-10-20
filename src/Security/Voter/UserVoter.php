@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserVoter extends Voter
 {
-    const EDIT = 'USER_EDIT';
+    const EDIT = 'USER_READ';
     const UPDATE = 'USER_UPDATE';
     const DELETE = 'USER_DELETE';
 
@@ -23,7 +23,7 @@ class UserVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if(!in_array($attribute, [self::EDIT, self::UPDATE, self::DELETE])){
+        if(!in_array($attribute, [self::READ, self::UPDATE, self::DELETE])){
             return false;
         }
         if(!$subject instanceof User){
@@ -39,7 +39,7 @@ class UserVoter extends Voter
         if($this->security->isGranted('ROLE_ADMIN'))return true;
 
         switch($attribute){
-            case self::EDIT:
+            case self::READ:
                 return $this->canEdit();
                 break;
             case self::UPDATE:
@@ -51,7 +51,7 @@ class UserVoter extends Voter
         }
     }
 
-    private function canEdit(){
+    private function canRead(){
         return $this->security->isGranted('ROLE_USER');
     }
     private function canUpdate(){

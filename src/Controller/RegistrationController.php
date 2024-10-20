@@ -96,13 +96,13 @@ class RegistrationController extends AbstractController
      * @return Response
      */
     #[Route('/resendverif',name: 'resend_verif')]
-    public function resendVerif(UserRepository $userRepository, JwtService $jwt, MailService $mail,IntraController $intra): Response
+    public function resendVerif(JwtService $jwt, MailService $mail,IntraController $checkEmail): Response
     {
         if($this->denyAccessUnlessGranted('ROLE_USER')){
             $this->addFlash('alert-danger','Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');
         }
-        if(!$intra->confirmationEmail($this->getUser()))
+        if(!$checkEmail->confirmationEmail($this->getUser()))
         {
             $this->addFlash('alert-warning','Ce compte est déjà activé !');
             return $this->redirectToRoute('app_main'); // vers profil
