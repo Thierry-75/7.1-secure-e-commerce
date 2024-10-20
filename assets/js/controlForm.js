@@ -530,7 +530,7 @@ const controlCity = function (champ, message, erratum) {
   } else {
     alert_submit(champ);
     clearMessage(message);
-    erratum.innerHTML = "Champ invalide - maximum 50 lettres avec ou sans espace";
+    erratum.innerHTML = "Champ invalide - maregistration_form_submitximum 50 lettres avec ou sans espace";
   }
 };
 
@@ -542,7 +542,7 @@ const controlCodePostal = function (champ, message, erratum) {
     alert_submit(champ);
     clearMessage(message);
     erratum.innerHTML = "Champ invalide - 5 chiffres";
-  }
+  }registration_form_submit
 };
 
 const controlAdresse = function (champ, message, erratum) {
