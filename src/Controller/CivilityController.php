@@ -61,6 +61,8 @@ class CivilityController extends AbstractController
         return $this->render('/civility/register.html.twig', ['form_register' => $form_register->createView()]);
     }
 
+    
+    /*---------------------------------------------------------------------------------------------------*/
     #[Route('civility/update/{id}',name:'app_civility_update',methods:['GET','POST'])]
     public function updateUser(Civility $civility): Response
     {

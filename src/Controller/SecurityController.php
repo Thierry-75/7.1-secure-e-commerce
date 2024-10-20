@@ -10,6 +10,7 @@ use App\Message\SendReinitialisation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Form\ResetPasswordRequestFormType;
+use App\Message\SendConfirmationReset;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -52,7 +53,7 @@ class SecurityController extends AbstractController
      * @param UserRepository $userRepository
      * @param TokenGeneratorInterface $tokenGeneratorInterface
      * @param EntityManagerInterface $em
-     * @param MailService $mail
+     * @param MessageBusInterface $bus
      * @return Response
      */
     #[Route('/forget-passwd', name: 'Forgotten_password', methods: ['GET', 'POST'])]
@@ -131,7 +132,7 @@ class SecurityController extends AbstractController
                     } catch (EntityNotFoundException $e) {
                         return $this->redirectToRoute('app_error');
                     }
-                    $bus->dispatch(new SendNotification('Votre mot de passe a bien été modifié',$user->getEmail()));
+                    $bus->dispatch(new SendConfirmationReset('Votre mot de passe a bien été modifié',$user->getEmail()));
                     $this->addFlash('alert-success', 'Mot de passe changé avec succès !');
                     return $this->redirectToRoute('app_main');
                 }
